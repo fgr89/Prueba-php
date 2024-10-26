@@ -2,14 +2,14 @@
 session_start();
 
 // Cargar configuración de base de datos primero
-require_once __DIR__ . '/config/Database.php';
+require_once 'config/database.php';  // Cambiado a relative path
 
 // Luego los modelos
-require_once __DIR__ . '/models/Product.php';
-require_once __DIR__ . '/models/Category.php';
+require_once 'models/Product.php';
+require_once 'models/Category.php';
 
 // Finalmente los controladores
-require_once __DIR__ . '/controllers/ProductController.php';
+require_once 'controllers/ProductController.php';
 
 // Crear instancia del controlador usando la base de datos remota
 $controller = new ProductController();
