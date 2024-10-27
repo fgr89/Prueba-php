@@ -6,7 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
     <!-- Estilos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/style.css" rel="stylesheet">
+    <!-- <link href="assets/css/style.css" rel="stylesheet"> -->
     <script src="assets/js/app.js"></script>
     <script src="assets/js/controllers/productController.js"></script>
 </head>
