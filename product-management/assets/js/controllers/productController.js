@@ -1,34 +1,44 @@
-var app = angular.module('productApp', []);
-
-// Controlador para manejar la lógica del producto
-app.controller('ProductController', function($scope, $http) {
-    // Cargar productos desde el servidor
+productApp.controller('ProductController', function($scope, $http) {
+    // Cargar productos
     $scope.loadProducts = function() {
         $http.get('index.php?action=getProducts')
             .then(function(response) {
-                // Asignar la lista de productos al scope
-                $scope.products = response.data;
+                if (response.data.success) {
+                    $scope.products = response.data.data;
+                } else {
+                    console.error('Error:', response.data.error);
+                }
             })
             .catch(function(error) {
                 console.error('Error loading products:', error);
             });
     };
-
-    // Función para eliminar un producto usando AJAX
+    
+    // Eliminar producto
     $scope.deleteProduct = function(code) {
         if (confirm('¿Está seguro de eliminar este producto?')) {
-            // Hacer una solicitud POST para eliminar el producto
-            $http.post('index.php?action=delete', { code: code })
-                .then(function(response) {
-                    // Recargar la lista de productos después de eliminar
+            $http({
+                method: 'POST',
+                url: 'index.php?action=delete',
+                data: { code: code },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(function(response) {
+                if (response.data.success) {
                     $scope.loadProducts();
-                })
-                .catch(function(error) {
-                    console.error('Error deleting product:', error);
-                });
+                } else {
+                    console.error('Error:', response.data.error);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error deleting product:', error);
+            });
         }
     };
 
-    // Cargar productos al iniciar el controlador
+    // Cargar productos al iniciar
     $scope.loadProducts();
 });
