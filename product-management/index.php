@@ -24,6 +24,9 @@ switch ($action) {
     case 'create':
         $controller->create();
         break;
+    case 'getProducts':
+            $controller->getProducts();
+            break;
     default:
         $controller->index();
 }

@@ -1,23 +1,33 @@
+// assets/js/app.js
 var app = angular.module('productApp', []);
 
-app.controller('ProductController', function($scope, $http) {
-    // Cargar productos
+// assets/js/controllers/productController.js
+app.controller('ProductController', function($scope, $http, $window) {
+    // Habilitar depuración
+    $scope.debug = true;
+    
+    // Cargar productos desde el servidor
     $scope.loadProducts = function() {
         $http.get('index.php?action=getProducts')
             .then(function(response) {
                 $scope.products = response.data;
+                if ($scope.debug) {
+                    console.log('Products loaded:', $scope.products);
+                }
             })
             .catch(function(error) {
                 console.error('Error loading products:', error);
             });
     };
     
-    // Eliminar producto usando AJAX
-    $scope.deleteProduct = function(id) {
-        if (confirm('Are you sure you want to delete this product?')) {
-            $http.post('index.php?action=delete', { id: id })
+    // Función para eliminar producto
+    $scope.deleteProduct = function(code) {
+        if ($window.confirm('¿Está seguro de eliminar este producto?')) {
+            $http.post('index.php?action=delete', { code: code })
                 .then(function(response) {
-                    // Recargar productos después de eliminar
+                    if ($scope.debug) {
+                        console.log('Delete response:', response);
+                    }
                     $scope.loadProducts();
                 })
                 .catch(function(error) {
@@ -25,7 +35,7 @@ app.controller('ProductController', function($scope, $http) {
                 });
         }
     };
-
-    // Cargar productos al iniciar el controlador
+    
+    // Inicializar cargando productos
     $scope.loadProducts();
 });

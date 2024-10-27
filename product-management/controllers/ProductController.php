@@ -30,6 +30,28 @@ class ProductController {
         require 'views/layout/main.php';
         require 'views/products/index.php';
     }
+
+    /**
+     * Método para obtener productos vía AJAX
+     * Retorna JSON con la lista de productos
+     */
+    public function getProducts() {
+        header('Content-Type: application/json');
+        try {
+            $products = $this->productModel->getAll();
+            echo json_encode([
+                'success' => true,
+                'data' => $products
+            ]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]);
+        }
+        exit;
+    }
     
     /**
      * Método para crear un nuevo producto
@@ -105,22 +127,56 @@ class ProductController {
     
     /**
      * Método para eliminar un producto
+     * Maneja tanto peticiones normales como AJAX
      * @param string $code Código del producto a eliminar
      */
-    public function delete($code) {
+    public function delete($code = null) {
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                  strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+
         try {
+            // Si es una petición AJAX POST, obtener el código del cuerpo de la petición
+            if ($isAjax && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                $data = json_decode(file_get_contents('php://input'), true);
+                $code = $data['code'] ?? null;
+            }
+
+            if (empty($code)) {
+                throw new Exception("Código de producto no proporcionado");
+            }
+
             // Intenta eliminar el producto
             if ($this->productModel->delete($code)) {
-                $_SESSION['success'] = "Producto eliminado exitosamente";
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => true,
+                        'message' => "Producto eliminado exitosamente"
+                    ]);
+                    exit;
+                } else {
+                    $_SESSION['success'] = "Producto eliminado exitosamente";
+                }
             }
         } catch (Exception $e) {
-            // Captura cualquier error durante el proceso
-            $_SESSION['error'] = $e->getMessage();
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                http_response_code(500);
+                echo json_encode([
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ]);
+                exit;
+            } else {
+                $_SESSION['error'] = $e->getMessage();
+            }
         }
         
-        // Redirecciona a la página principal
-        header('Location: index.php');
-        exit;
+        // Si no es AJAX, redireccionar a la página principal
+        if (!$isAjax) {
+            header('Location: index.php');
+            exit;
+        }
     }
     
     /**
