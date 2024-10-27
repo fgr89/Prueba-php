@@ -39,16 +39,15 @@ class ProductController {
         header('Content-Type: application/json');
         try {
             $products = $this->productModel->getAll();
-            echo json_encode([
-                'success' => true,
-                'data' => $products
-            ]);
+            error_log('PHP - Productos obtenidos: ' . print_r($products, true));
+            
+            $response = ['success' => true, 'data' => $products];
+            error_log('PHP - Respuesta enviada: ' . json_encode($response));
+            echo json_encode($response);
         } catch (Exception $e) {
+            error_log('PHP - Error: ' . $e->getMessage());
             http_response_code(500);
-            echo json_encode([
-                'success' => false,
-                'error' => $e->getMessage()
-            ]);
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
         }
         exit;
     }
