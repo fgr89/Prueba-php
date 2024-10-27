@@ -1,15 +1,10 @@
-<!-- views/products/index.php -->
 <div ng-controller="ProductController">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Products</h1>
         <a href="index.php?action=create" class="btn btn-primary">New Product</a>
     </div>
 
-    <div ng-show="products.length === 0" class="alert alert-info">
-        No hay productos disponibles.
-    </div>
-
-    <table ng-show="products.length > 0" class="table table-striped">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Code</th>

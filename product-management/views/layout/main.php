@@ -2,16 +2,11 @@
 <html>
 <head>
     <title>Product Management</title>
-    <!-- Primero cargar AngularJS (solo una vez) -->
+    <!-- Cargar AngularJS primero -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
-    
-    <!-- Después Bootstrap -->
+    <!-- Estilos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
-    
-    <!-- Finalmente los scripts de la aplicación -->
-    <script src="product-management/assets/js/app.js"></script>
-    <script src="product-management/assets/js/controllers/productController.js"></script>
 </head>
 <body ng-app="productApp">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -35,5 +30,9 @@
 
         <?php if (isset($content)) echo $content; ?>
     </div>
+
+    <!-- Scripts de la aplicación después del contenido -->
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/controllers/productController.js"></script>
 </body>
 </html>
