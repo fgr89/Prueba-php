@@ -216,4 +216,15 @@ class ProductController {
         
         return $data;
     }
+    public function getCategories() {
+        header('Content-Type: application/json');
+        try {
+            $categories = $this->categoryModel->getAll();
+            echo json_encode($categories);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+        exit;
+    }
 }

@@ -1,11 +1,13 @@
-// assets/js/app.js
 var app = angular.module('productApp', []);
 
-// assets/js/controllers/productController.js
 app.controller('ProductController', function($scope, $http) {
-    console.log('1. Controlador iniciado');
+    // Estado inicial
     $scope.products = [];
+    $scope.categories = [];
+    $scope.showCreateForm = false;
+    $scope.newProduct = {};
     
+    // Cargar productos
     $scope.loadProducts = function() {
         console.log('2. Iniciando carga de productos');
         
@@ -20,8 +22,47 @@ app.controller('ProductController', function($scope, $http) {
             });
     };
     
+    // Cargar categorías
+    $scope.loadCategories = function() {
+        $http.get('index.php?action=getCategories')
+            .then(function(response) {
+                $scope.categories = response.data || [];
+            })
+            .catch(function(error) {
+                console.error('Error cargando categorías:', error);
+            });
+    };
+    
+    // Mostrar formulario de creación
+    $scope.showCreate = function() {
+        $scope.showCreateForm = true;
+        if($scope.categories.length === 0) {
+            $scope.loadCategories();
+        }
+    };
+    
+    // Cancelar creación
+    $scope.cancelCreate = function() {
+        $scope.showCreateForm = false;
+        $scope.newProduct = {};
+    };
+    
+    // Crear producto
+    $scope.createProduct = function() {
+        $http.post('index.php?action=create', $scope.newProduct)
+            .then(function(response) {
+                alert('Producto creado exitosamente');
+                $scope.showCreateForm = false;
+                $scope.newProduct = {};
+                $scope.loadProducts();
+            })
+            .catch(function(error) {
+                alert('Error al crear el producto: ' + (error.data.error || 'Error desconocido'));
+            });
+    };
+    
+    // Eliminar producto
     $scope.deleteProduct = function(code) {
-        console.log('5. Intentando eliminar producto:', code);
         if (confirm('¿Está seguro de eliminar este producto?')) {
             $http.post('index.php?action=delete', { code: code })
                 .then(function(response) {
@@ -33,6 +74,7 @@ app.controller('ProductController', function($scope, $http) {
                 });
         }
     };
-
+    
+    // Cargar datos iniciales
     $scope.loadProducts();
 });
