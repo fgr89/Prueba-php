@@ -1,0 +1,94 @@
+<!-- product-edit.component.html -->
+<div class="container mt-4">
+    <div class="card">
+      <div class="card-header">
+        <h2>Editar Producto</h2>
+      </div>
+      <div class="card-body">
+        <div *ngIf="error" class="alert alert-danger">
+          {{ error }}
+        </div>
+  
+        <div *ngIf="successMessage" class="alert alert-success">
+          {{ successMessage }}
+        </div>
+  
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+          <!-- Código (deshabilitado) -->
+          <div class="mb-3">
+            <label for="code" class="form-label">Código</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="code"
+              formControlName="code"
+              [attr.disabled]="true">
+          </div>
+  
+          <!-- Nombre -->
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre *</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="name"
+              formControlName="name">
+            <div class="text-danger small" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+              El nombre es requerido
+            </div>
+          </div>
+  
+          <!-- Categoría -->
+          <div class="mb-3">
+            <label for="category_id" class="form-label">Categoría *</label>
+            <select 
+              class="form-select" 
+              id="category_id"
+              formControlName="category_id">
+              <option value="">Seleccione una categoría</option>
+              <option value="1">Categoría 1</option>
+              <option value="2">Categoría 2</option>
+              <option value="3">Categoría 3</option>
+            </select>
+            <div class="text-danger small" *ngIf="productForm.get('category_id')?.invalid && productForm.get('category_id')?.touched">
+              La categoría es requerida
+            </div>
+          </div>
+  
+          <!-- Precio -->
+          <div class="mb-3">
+            <label for="price" class="form-label">Precio *</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="price"
+                formControlName="price"
+                step="0.01"
+                min="0">
+            </div>
+            <div class="text-danger small" *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched">
+              El precio es requerido y debe ser mayor a 0
+            </div>
+          </div>
+  
+          <!-- Botones -->
+          <div class="d-flex justify-content-end gap-2">
+            <button 
+              type="button" 
+              class="btn btn-secondary" 
+              [routerLink]="['/products']">
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              class="btn btn-primary"
+              [disabled]="productForm.invalid || loading">
+              {{ loading ? 'Guardando...' : 'Guardar Cambios' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
