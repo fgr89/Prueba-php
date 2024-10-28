@@ -1,4 +1,3 @@
-// product-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductService } from '../product.service';
@@ -39,9 +38,11 @@ export class ProductListComponent implements OnInit {
   }
 
   deleteProduct(code: string): void {
+    // Confirmación antes de eliminar
     if (confirm('¿Está seguro de eliminar este producto?')) {
       this.productService.deleteProduct(code).subscribe({
         next: () => {
+          // Filtrar el producto eliminado
           this.products = this.products.filter(p => p.code !== code);
         },
         error: (err) => {
@@ -51,20 +52,3 @@ export class ProductListComponent implements OnInit {
     }
   }
 }
-
-// products.module.ts (asegúrate que este archivo tenga estas importaciones)
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';  // Importante!
-
-import { ProductsRoutingModule } from '../products-routing.module';
-
-@NgModule({
-  declarations: [
-    ProductListComponent
-  ],
-  imports: [
-    CommonModule,  // Esta importación es crucial
-    ProductsRoutingModule
-  ]
-})
-export class ProductsModule { }
